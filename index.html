@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LINE Liff App Bot</title>
+  <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+</head>
+
+<body>
+  <h1>Hello Liff App!</h1>
+  <button onclick="login()">登入LINE</button>
+  <button onclick="share()">分享訊息</button>
+  <script>
+    const liffId = '1656848246-paRggRDV';
+    liff.init({
+      liffId: liffId, // Use own liffId
+    })
+      .then(() => {
+        // start to use LIFF's api
+        const islogin = liff.isLoggedIn()
+        console.log('islogin', islogin);
+        if (islogin) {
+          liff.getProfile()
+            .then(profile => {
+              console.log('profile', profile)
+            })
+            .catch((err) => {
+              console.log('error', err);
+            });
+        }
+
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    const login = () => {
+      liff.login({ redirectUri: "https://e04e-117-56-50-51.ngrok.io" });
+    }
+
+    const share = () => {
+
+      if(liff.isLoggedIn()) {
+        liff.shareTargetPicker(
+          [
+            // Message Objects: 放入要傳送的訊息
+            {
+              "type" : "text",
+              "text" : "Hello, world"
+            }
+          ],
+          {
+            isMultiple: true,
+          }
+        )
+          .then(function (res) {
+            console.log(`[${res.status}] Message sent!`)
+          }).catch(function (error) {
+            // something went wrong before sending a message
+            console.log(error);
+            console.log('something wrong happen')
+          })
+      } else {
+        login()
+      }
+      
+    }
+
+  </script>
+</body>
+
+</html>
